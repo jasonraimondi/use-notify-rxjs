@@ -1,6 +1,2 @@
-import * as React from 'react';
-
-// Delete me
-export const Thing = () => {
-  return <div>the snozzberries taste like snozzberries</div>;
-};
+export * from "./notify_service";
+export * from "./use_notify";
