@@ -1,68 +1,80 @@
 import { BehaviorSubject } from 'rxjs';
 
-export enum NotificationType {
+export enum NotifyType {
   Error ='error',
   Info = 'info',
   Success = 'success',
 }
 
-export interface Notification {
+export interface Notify {
   id: number;
   message: string;
-  type: NotificationType;
+  type: NotifyType;
   isSuccess: boolean;
   isInfo: boolean;
   isError: boolean;
 }
 
-export type NotificationList = Record<number, Notification>;
+export type NotifyList = Record<number, Notify>;
 
 export type NotifySettings = {
   ttl: number;
 };
 
 export class NotifyService {
-  public readonly messageList$ = new BehaviorSubject<NotificationList>({});
+  private settings: NotifySettings = { ttl: 4500 };
 
-  private settings: NotifySettings = { ttl: 2750 };
+  private readonly CLEAR_STATE = {};
+
+  public readonly messageList$ = new BehaviorSubject<NotifyList>(this.CLEAR_STATE);
 
   setOptions(customSettings: Partial<NotifySettings>) {
     this.settings = { ...this.settings, ...customSettings, }
   }
 
   success(message: string, ttl?: number) {
-    this.flash(message, NotificationType.Success, ttl);
+    this.flash(message, NotifyType.Success, ttl);
   }
 
   info(message: string, ttl?: number) {
-    this.flash(message, NotificationType.Info, ttl);
+    this.flash(message, NotifyType.Info, ttl);
   }
 
   error(message: string, ttl?: number) {
-    this.flash(message, NotificationType.Error, ttl);
+    this.flash(message, NotifyType.Error, ttl);
   }
 
-  remove(id: number): void {
+  clear(id?: number) {
+    if (id) {
+      this.remove(id);
+    } else {
+      this.messageList$.next(this.CLEAR_STATE);
+    }
+  }
+
+  private remove(id: number): void {
     const existing = this.messageList$.value;
-    delete existing[id];
-    this.messageList$.next(existing);
+    if (existing.hasOwnProperty(id)) {
+      delete existing[id];
+      this.messageList$.next(existing);
+    }
   }
 
-  private flash(message: string, type: NotificationType, ttl?: number): void {
+  private flash(message: string, type: NotifyType, ttl?: number): void {
     ttl = ttl ?? this.settings.ttl;
     const id = Date.now();
     this.addMessageToList({
       id,
       message,
       type,
-      isSuccess: type === NotificationType.Success,
-      isInfo: type === NotificationType.Info,
-      isError: type === NotificationType.Error,
+      isSuccess: type === NotifyType.Success,
+      isInfo: type === NotifyType.Info,
+      isError: type === NotifyType.Error,
     });
     setTimeout(() => this.remove(id), ttl);
   }
 
-  private addMessageToList(message: Notification): void {
+  private addMessageToList(message: Notify): void {
     const messageList = {
       ...this.messageList$.value,
       [message.id]: message,

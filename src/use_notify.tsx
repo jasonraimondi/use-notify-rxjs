@@ -1,20 +1,22 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { NotificationList, notifyService } from "./notify_service";
+import { Notify, NotifyList, notifyService } from "./notify_service";
 
 // @ts-ignore
 const NotificationContext = createContext<UseNotify>();
 
 type State = {
-  notifications: NotificationList;
+  notifications: NotifyList;
 }
 
 function NotificationProvider(props: any) {
-  const [state, setState] = useState<State>({ notifications: {} })
+  const [state, setState] = useState<State>({ notifications: [] })
 
   useEffect(() => {
     notifyService.messageList$.subscribe((messages) => {
-      setState({ notifications: Object.values(messages) });
+      const notifications = messages ? Object.values(messages) : [];
+      console.log({ messages, notifications })
+      setState({ notifications });
     });
 
     return () => {
@@ -24,6 +26,7 @@ function NotificationProvider(props: any) {
 
   return <NotificationContext.Provider value={{
     notifications: state.notifications,
+    clear: (id?: number) => notifyService.clear(id),
     success: (message: string) => notifyService.success(message),
     info: (message: string) => notifyService.info(message),
     error: (message: string) => notifyService.error(message),
@@ -31,7 +34,8 @@ function NotificationProvider(props: any) {
 }
 
 type UseNotify = {
-  notifications: Notification[];
+  notifications: Notify[];
+  clear(id?: number): void;
   success(message: string): void;
   info(message: string): void;
   error(message: string): void;

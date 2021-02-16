@@ -1,31 +1,40 @@
-import 'react-app-polyfill/ie11';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import "react-app-polyfill/ie11";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { NotificationProvider, notifyService, useNotify } from "../src";
 
-notifyService.setOptions({
-  ttl: 6000,
-})
 
 function Example() {
-  const notify = useNotify();
+  const { notifications, success, info, error, clear } = useNotify();
 
   return <section>
     <article>
-      <pre><code>{JSON.stringify(notify.notifications, null, 2)}</code></pre>
+      <button onClick={() => success("This is a success notification")}>Add Success</button>
+      <button onClick={() => info("This is an info notification")}>Add Info</button>
+      <button onClick={() => error("This is an error notification")}>Add Error</button>
     </article>
     <article>
-      <button onClick={() => notify.success(`success at: ${Date.now()}`)}>Add Success</button>
-      <button onClick={() => notify.info(`info at: ${Date.now()}`)}>Add Info</button>
-      <button onClick={() => notify.error(`error at: ${Date.now()}`)}>Add Error</button>
+      <ul style={{ fontSize: 20 }}>
+        {notifications.map(note =>
+          <li key={note.id}>
+            {note.message} <span onClick={() => clear(note.id)}>&times;</span>
+          </li>
+        )}
+      </ul>
+      <pre><code>{JSON.stringify(notifications, null, 2)}</code></pre>
     </article>
-  </section>
+  </section>;
 }
 
 function App() {
   return <NotificationProvider>
-    <Example />
+    <Example/>
   </NotificationProvider>;
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// optional: setting custom notification ttl
+notifyService.setOptions({
+  ttl: 4500, // default value is 4500ms
+});
+
+ReactDOM.render(<App/>, document.getElementById("root"));
