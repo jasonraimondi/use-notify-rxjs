@@ -1,6 +1,6 @@
 # `useNotify`
 
-Simple, design-free toast notifications.
+Simple, design-free toast notifications with a single peer dependency: `rxjs`.
 
 ## Usage
 
@@ -27,7 +27,7 @@ function Demo() {
     </ul>
   </>
   );
-};
+}
 ```
 
 ```jsx
