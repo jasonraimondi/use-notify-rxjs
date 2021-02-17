@@ -1,7 +1,7 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { NotificationProvider, notifyService, useNotify } from "../src";
+import { NotifyProvider, notifyService, useNotify } from "../src";
 
 
 function Example() {
@@ -27,9 +27,9 @@ function Example() {
 }
 
 function App() {
-  return <NotificationProvider>
+  return <NotifyProvider>
     <Example/>
-  </NotificationProvider>;
+  </NotifyProvider>;
 }
 
 // optional: setting custom notification ttl

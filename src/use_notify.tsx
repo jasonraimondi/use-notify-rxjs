@@ -9,7 +9,7 @@ type State = {
   notifications: NotifyList;
 }
 
-function NotificationProvider(props: any) {
+function NotifyProvider(props: any) {
   const [state, setState] = useState<State>({ notifications: [] })
 
   useEffect(() => {
@@ -43,4 +43,4 @@ type UseNotify = {
 
 const useNotify = () => useContext<UseNotify>(NotificationContext);
 
-export { NotificationProvider, useNotify };
+export { NotifyProvider, useNotify };
