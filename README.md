@@ -7,7 +7,7 @@ Simple, design-free toast notifications.
 ```jsx
 import { useNotify } from 'use-notify-rxjs';
 
-const Demo = () => {
+function Demo() {
   const notify = useNotify();
 
   return (
