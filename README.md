@@ -1,5 +1,7 @@
 # `useNotify`
 
+[![CI](https://github.com/jasonraimondi/use-notify-rxjs/workflows/CI/badge.svg)](https://github.com/jasonraimondi/use-notify-rxjs)
+
 Simple, design-free toast notifications with a single peer dependency: `rxjs`.
 
 ## Usage
