@@ -11,14 +11,21 @@ const Demo = () => {
   const notify = useNotify();
 
   return (
-      <ul>
-        {notify.notifications.map(note =>
-          <li key={note.id}>
-            <span>{note.message}</span> 
-            <span onClick={() => clear(note.id)}>&times;</span>
-          </li>
-        )}
-      </ul>
+  <>
+    <div>
+      <button onClick={() => notify.success("This is a success notification")}>Add Success</button>
+      <button onClick={() => notify.info("This is an info notification")}>Add Info</button>
+      <button onClick={() => notify.error("This is an error notification")}>Add Error</button>
+    </div>
+    <ul>
+      {notify.notifications.map(note =>
+        <li key={note.id} className={note.type}>
+          <span>{note.message}</span> 
+          <span onClick={() => clear(note.id)}>&times;</span>
+        </li>
+      )}
+    </ul>
+  </>
   );
 };
 ```
