@@ -50,3 +50,11 @@ const { notifications, success, info, error, clear } = useNotify();
 - **`info`**_`: (message: string) => void`_ - send info alert
 - **`error`**_`: (message: string) => void`_ - send error alert
 - **`clear`**_`: (id?: number) => void`_ - clear single or all alerts
+
+```jsx
+<NotifyProvider ttl={4500}>
+  <Demo />
+</NotifyProvider>
+```
+
+- **`ttl`**_`: number (optional, default: 4500)`_ - number of ms the notification should be kept alive
