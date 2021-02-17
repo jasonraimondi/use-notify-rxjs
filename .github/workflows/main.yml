@@ -1,32 +1,38 @@
 name: CI
+
 on: [push]
+
 jobs:
   build:
     name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        node: ['12.x', '14.x']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node-version: [ 10.x, 12.x, 14.x ]
+        os:
+          - ubuntu-latest
+#          - windows-latest
+          - macOS-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Use Node ${{ matrix.node }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
-
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm install -g npm
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
-
-      - name: Lint
-        run: npm run lint
-
       - name: Test
-        run: npm run test --ci --coverage --maxWorkers=2
-
+        run: npm run test --ci --maxWorkers=2
       - name: Build
-        run: npm run build
+        run: npm run build --if-present
