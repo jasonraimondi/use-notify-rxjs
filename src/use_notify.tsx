@@ -1,19 +1,23 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { Notify, NotifyList, notifyService } from "./notify_service";
+import { Notify, NotifyList, NotifySettings, notifyService } from "./notify_service";
 
 // @ts-ignore
 const NotificationContext = createContext<UseNotify>();
 
 type State = {
-  notifications: NotifyList;
+  notifications: Notify[];
 }
 
-function NotifyProvider(props: any) {
+type NotifyProviderProps = NotifySettings & { [key: string]: unknown };
+
+function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
   const [state, setState] = useState<State>({ notifications: [] })
 
   useEffect(() => {
-    notifyService.messageList$.subscribe((messages) => {
+    if (ttl) notifyService.setOptions({ ttl })
+
+    notifyService.messageList$.subscribe((messages: NotifyList) => {
       const notifications = messages ? Object.values(messages) : [];
       console.log({ messages, notifications })
       setState({ notifications });
