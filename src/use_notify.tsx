@@ -9,7 +9,7 @@ type State = {
   notifications: Notify[];
 }
 
-type NotifyProviderProps = NotifySettings & { [key: string]: unknown };
+type NotifyProviderProps = Partial<NotifySettings> & { [key: string]: unknown };
 
 function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
   const [state, setState] = useState<State>({ notifications: [] })
@@ -19,7 +19,6 @@ function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
 
     notifyService.messageList$.subscribe((messages: NotifyList) => {
       const notifications = messages ? Object.values(messages) : [];
-      console.log({ messages, notifications })
       setState({ notifications });
     });
 
