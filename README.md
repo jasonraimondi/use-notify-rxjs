@@ -4,6 +4,12 @@
 
 Simple, design-free toast notifications with a single peer dependency: `rxjs`.
 
+## Installation
+
+```bash
+npm install --save use-notify-rxjs
+```
+
 ## Usage
 
 ```jsx
