@@ -16,9 +16,9 @@ describe(NotifyService, () => {
 
   it("sends multiple notifications in ascending order", () => {
     const message = "I am info";
+    const title = "This is my title";
 
-
-    notifyService.info(message);
+    notifyService.info({ message, title });
     advanceBy(100); // advance time 100ms
     notifyService.success(message);
     advanceBy(100); // advance time 100ms
@@ -33,18 +33,21 @@ describe(NotifyService, () => {
     expect(infoNotify.isInfo).toEqual(true);
     expect(infoNotify.isError).toEqual(false);
     expect(infoNotify.message).toEqual(message);
+    expect(infoNotify.title).toEqual(title);
 
     expect(successNotify.type).toEqual(NotifyType.Success.toString());
     expect(successNotify.isSuccess).toEqual(true);
     expect(successNotify.isInfo).toEqual(false);
     expect(successNotify.isError).toEqual(false);
     expect(successNotify.message).toEqual(message);
+    expect(successNotify.title).toBeUndefined();
 
     expect(errorNotify.type).toEqual(NotifyType.Error.toString());
     expect(errorNotify.isSuccess).toEqual(false);
     expect(errorNotify.isInfo).toEqual(false);
     expect(errorNotify.isError).toEqual(true);
     expect(errorNotify.message).toEqual(message);
+    expect(errorNotify.title).toBeUndefined();
 
     jest.advanceTimersByTime(10000);
     expect(Object.keys(notifyService.messageList$.value)).toHaveLength(0);

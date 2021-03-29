@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { Notify, NotifyList, NotifySettings, notifyService } from "./notify_service";
+import { Notify, NotifyList, notifyService, NotifySettings } from "./notify_service";
 
 // @ts-ignore
 const NotificationContext = createContext<UseNotify>();
@@ -12,10 +12,10 @@ type State = {
 type NotifyProviderProps = Partial<NotifySettings> & { [key: string]: unknown };
 
 function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
-  const [state, setState] = useState<State>({ notifications: [] })
+  const [state, setState] = useState<State>({ notifications: [] });
 
   useEffect(() => {
-    if (ttl) notifyService.setOptions({ ttl })
+    if (ttl) notifyService.setOptions({ ttl });
 
     notifyService.messageList$.subscribe((messages: NotifyList) => {
       const notifications = messages ? Object.values(messages) : [];
@@ -24,24 +24,29 @@ function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
 
     return () => {
       notifyService.messageList$.unsubscribe();
-    }
-  }, [])
+    };
+  }, []);
 
   return <NotificationContext.Provider value={{
     notifications: state.notifications,
     clear: (id?: number) => notifyService.clear(id),
-    success: (message: string) => notifyService.success(message),
-    info: (message: string) => notifyService.info(message),
-    error: (message: string) => notifyService.error(message),
+    success: (message) => notifyService.success(message),
+    info: (message) => notifyService.info(message),
+    error: (message) => notifyService.error(message),
   }} {...props} />;
 }
+
+export type NotifyMessage = {
+  message: string;
+  title?: string;
+};
 
 type UseNotify = {
   notifications: Notify[];
   clear(id?: number): void;
-  success(message: string): void;
-  info(message: string): void;
-  error(message: string): void;
+  success(message: string | NotifyMessage): void;
+  info(message: string | NotifyMessage): void;
+  error(message: string | NotifyMessage): void;
 };
 
 const useNotify = () => useContext<UseNotify>(NotificationContext);

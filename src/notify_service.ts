@@ -1,14 +1,16 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from "rxjs";
+import { NotifyMessage } from "./use_notify";
 
 export enum NotifyType {
-  Error ='error',
-  Info = 'info',
-  Success = 'success',
+  Error = "error",
+  Info = "info",
+  Success = "success",
 }
 
-export interface Notify {
+export type Notify = {
   id: number;
   message: string;
+  title?: string;
   type: NotifyType;
   isSuccess: boolean;
   isInfo: boolean;
@@ -29,18 +31,18 @@ export class NotifyService {
   public readonly messageList$ = new BehaviorSubject<NotifyList>(this.CLEAR_STATE);
 
   setOptions(customSettings: Partial<NotifySettings>) {
-    this.settings = { ...this.settings, ...customSettings, }
+    this.settings = { ...this.settings, ...customSettings };
   }
 
-  success(message: string, ttl?: number) {
+  success(message: string | NotifyMessage, ttl?: number) {
     this.flash(message, NotifyType.Success, ttl);
   }
 
-  info(message: string, ttl?: number) {
+  info(message: string | NotifyMessage, ttl?: number) {
     this.flash(message, NotifyType.Info, ttl);
   }
 
-  error(message: string, ttl?: number) {
+  error(message: string | NotifyMessage, ttl?: number) {
     this.flash(message, NotifyType.Error, ttl);
   }
 
@@ -60,12 +62,20 @@ export class NotifyService {
     }
   }
 
-  private flash(message: string, type: NotifyType, ttl?: number): void {
+  private flash(message: string | NotifyMessage, type: NotifyType = NotifyType.Info, ttl?: number): void {
     ttl = ttl ?? this.settings.ttl;
     const id = Date.now();
+    let title: string | undefined;
+
+    if (typeof message !== "string") {
+      title = message.title;
+      message = message.message;
+    }
+
     this.addMessageToList({
       id,
       message,
+      title,
       type,
       isSuccess: type === NotifyType.Success,
       isInfo: type === NotifyType.Info,

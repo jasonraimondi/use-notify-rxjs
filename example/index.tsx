@@ -9,7 +9,7 @@ function Example() {
 
   return <section>
     <article>
-      <button onClick={() => success("This is a success notification")}>Add Success</button>
+      <button onClick={() => success({ title: "Title 1", message: "This is a success notification" })}>Add Success</button>
       <button onClick={() => info("This is an info notification")}>Add Info</button>
       <button onClick={() => error("This is an error notification")}>Add Error</button>
     </article>
@@ -17,6 +17,7 @@ function Example() {
       <ul style={{ fontSize: 20 }}>
         {notifications.map(note =>
           <li key={note.id}>
+            <h3>{note.title}</h3>
             {note.message} <span onClick={() => clear(note.id)}>&times;</span>
           </li>
         )}

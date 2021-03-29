@@ -21,7 +21,7 @@ function Demo() {
   return (
   <>
     <div>
-      <button onClick={() => notify.success("This is a success notification")}>Add Success</button>
+      <button onClick={() => notify.success({ message: "This is a success notification", title: "Congrats!"})}>Add Success</button>
       <button onClick={() => notify.info("This is an info notification")}>Add Info</button>
       <button onClick={() => notify.error("This is an error notification")}>Add Error</button>
     </div>
@@ -53,11 +53,35 @@ ReactDOM.render(<App/>, document.getElementById("root"));
 ```ts
 const { notifications, success, info, error, clear } = useNotify();
 ```
-- **`notifications`**_`: Notification[]`_ - list of notifications
-- **`success`**_`: (message: string) => void`_ - send success alert
-- **`info`**_`: (message: string) => void`_ - send info alert
-- **`error`**_`: (message: string) => void`_ - send error alert
+
+- **`notifications`**_`: Notify[]`_ - list of notifications
+- **`success`**_`: (message: string | NofityMessage) => void`_ - send success alert
+- **`info`**_`: (message: string | NofityMessage) => void`_ - send info alert
+- **`error`**_`: (message: string | NofityMessage) => void`_ - send error alert
 - **`clear`**_`: (id?: number) => void`_ - clear single or all alerts
+
+```ts
+type Notify = {
+  id: number;
+  message: string;
+  title?: string;
+  type: NotifyType;
+  isSuccess: boolean;
+  isInfo: boolean;
+  isError: boolean;
+}
+
+type NotifyMessage = {
+  message: string;
+  title?: string;
+}
+
+enum NotifyType {
+  Error = "error",
+  Info = "info",
+  Success = "success",
+}
+```
 
 ```jsx
 <NotifyProvider ttl={4500}>
