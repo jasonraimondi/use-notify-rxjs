@@ -34,16 +34,16 @@ export class NotifyService {
     this.settings = { ...this.settings, ...customSettings };
   }
 
-  success(message: string | NotifyMessage, ttl?: number) {
-    this.flash(message, NotifyType.Success, ttl);
+  success(message: string | NotifyMessage) {
+    this.flash(message, NotifyType.Success);
   }
 
-  info(message: string | NotifyMessage, ttl?: number) {
-    this.flash(message, NotifyType.Info, ttl);
+  info(message: string | NotifyMessage) {
+    this.flash(message, NotifyType.Info);
   }
 
-  error(message: string | NotifyMessage, ttl?: number) {
-    this.flash(message, NotifyType.Error, ttl);
+  error(message: string | NotifyMessage) {
+    this.flash(message, NotifyType.Error);
   }
 
   clear(id?: number) {
@@ -62,13 +62,14 @@ export class NotifyService {
     }
   }
 
-  private flash(message: string | NotifyMessage, type: NotifyType = NotifyType.Info, ttl?: number): void {
-    ttl = ttl ?? this.settings.ttl;
+  private flash(message: string | NotifyMessage, type: NotifyType = NotifyType.Info): void {
     const id = Date.now();
     let title: string | undefined;
+    let ttl = this.settings.ttl;
 
     if (typeof message !== "string") {
       title = message.title;
+      ttl = message.ttl ?? ttl;
       message = message.message;
     }
 

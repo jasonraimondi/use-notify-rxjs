@@ -39,6 +39,7 @@ function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
 export type NotifyMessage = {
   message: string;
   title?: string;
+  ttl?: number;
 };
 
 type UseNotify = {
