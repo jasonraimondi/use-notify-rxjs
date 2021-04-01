@@ -9,8 +9,8 @@ function Example() {
 
   return <section>
     <article>
-      <button onClick={() => success({ title: "Title 1", message: "This is a success notification" })}>Add Success</button>
-      <button onClick={() => info("This is an info notification")}>Add Info</button>
+      <button onClick={() => success({ message: "This is a success notification", title: "Congrats!", ttl: 2000 })}>Add Success</button>
+      <button onClick={() => info({ message: "This is an info notification", ttl: 10000 })}>Add Info</button>
       <button onClick={() => error("This is an error notification")}>Add Error</button>
     </article>
     <article>

@@ -21,7 +21,7 @@ function Demo() {
   return (
   <>
     <div>
-      <button onClick={() => notify.success({ message: "This is a success notification", title: "Congrats!", ttl: 8000 })}>Add Success</button>
+      <button onClick={() => notify.success({ message: "This is a success notification", title: "Congrats!", ttl: 2000 })}>Add Success</button>
       <button onClick={() => notify.info({ message: "This is an info notification", ttl: 10000 })}>Add Info</button>
       <button onClick={() => notify.error("This is an error notification")}>Add Error</button>
     </div>
@@ -69,6 +69,7 @@ type Notify = {
   isSuccess: boolean;
   isInfo: boolean;
   isError: boolean;
+  ttl: number;
 }
 
 type NotifyMessage = {

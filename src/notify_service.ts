@@ -15,6 +15,7 @@ export type Notify = {
   isSuccess: boolean;
   isInfo: boolean;
   isError: boolean;
+  ttl: number;
 }
 
 export type NotifyList = Record<number, Notify>;
@@ -78,6 +79,7 @@ export class NotifyService {
       message,
       title,
       type,
+      ttl,
       isSuccess: type === NotifyType.Success,
       isInfo: type === NotifyType.Info,
       isError: type === NotifyType.Error,
