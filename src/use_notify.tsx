@@ -11,11 +11,12 @@ type State = {
 
 type NotifyProviderProps = Partial<NotifySettings> & { [key: string]: unknown };
 
-function NotifyProvider({ ttl, ...props }: NotifyProviderProps) {
+function NotifyProvider({ ttl, suppressDuplicates, ...props }: NotifyProviderProps) {
   const [state, setState] = useState<State>({ notifications: [] });
 
   useEffect(() => {
     if (ttl) notifyService.setOptions({ ttl });
+    if (suppressDuplicates) notifyService.setOptions({ suppressDuplicates });
 
     notifyService.messageList$.subscribe((messages: NotifyList) => {
       const notifications = messages ? Object.values(messages) : [];

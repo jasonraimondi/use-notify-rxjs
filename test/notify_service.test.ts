@@ -14,6 +14,44 @@ describe(NotifyService, () => {
     expect(notifyService.messageList$.value).toEqual({});
   });
 
+  it("allows duplicate notifications by default", () => {
+    const message = "I am info";
+    const title = "This is my title";
+
+    notifyService.info({ message, title });
+    advanceBy(100);
+    notifyService.info({ message, title });
+    advanceBy(100);
+    notifyService.success(message);
+    advanceBy(100);
+    notifyService.success(message);
+
+    expect(Object.keys(notifyService.messageList$.value)).toHaveLength(4);
+    const [one, _, three] = Object.values(notifyService.messageList$.value);
+    expect(one.title).toBe(title)
+    expect(three.title).toBeUndefined();
+  });
+
+  it("setting suppressDuplicates blocks duplicate notifications ", () => {
+    const message = "I am info";
+    const title = "This is my title";
+
+    notifyService.setOptions({ suppressDuplicates: true });
+
+    notifyService.info({ message, title });
+    advanceBy(100);
+    notifyService.info({ message, title });
+    advanceBy(100);
+    notifyService.success(message);
+    advanceBy(100);
+    notifyService.success(message);
+
+    expect(Object.keys(notifyService.messageList$.value)).toHaveLength(2);
+    const [one, two] = Object.values(notifyService.messageList$.value);
+    expect(one.title).toBe(title)
+    expect(two.title).toBeUndefined();
+  });
+
   it("sends multiple notifications in ascending order", () => {
     const message = "I am info";
     const title = "This is my title";

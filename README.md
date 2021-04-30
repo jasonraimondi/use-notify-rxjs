@@ -40,7 +40,7 @@ function Demo() {
 
 ```jsx
 function App() {
-  return <NotifyProvider>
+  return <NotifyProvider supressDuplicates>
     <Demo />
   </NotifyProvider>;
 }
@@ -86,7 +86,7 @@ enum NotifyType {
 ```
 
 ```jsx
-<NotifyProvider ttl={4500}>
+<NotifyProvider ttl={4500} supressDuplicates={true}>
   <Demo />
 </NotifyProvider>
 ```
