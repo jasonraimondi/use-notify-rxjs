@@ -1,7 +1,7 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { NotifyProvider, notifyService, useNotify } from "../src";
+import { NotifyProvider, useNotify } from "../src";
 
 
 function Example() {
@@ -28,14 +28,15 @@ function Example() {
 }
 
 function App() {
-  return <NotifyProvider>
+  return <NotifyProvider suppressDuplicates>
     <Example/>
   </NotifyProvider>;
 }
 
 // optional: setting custom notification ttl
-notifyService.setOptions({
-  ttl: 4500, // default value is 4500ms
-});
+// notifyService.setOptions({
+//   suppressDuplicates: true,
+//   ttl: 4500, // default value is 4500ms
+// });
 
 ReactDOM.render(<App/>, document.getElementById("root"));

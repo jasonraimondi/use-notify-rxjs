@@ -22,10 +22,13 @@ export type NotifyList = Record<number, Notify>;
 
 export type NotifySettings = {
   ttl: number;
+  suppressDuplicates: boolean;
 };
 
 export class NotifyService {
-  private settings: NotifySettings = { ttl: 4500 };
+  private settings: NotifySettings = { ttl: 4500, suppressDuplicates: false };
+
+  private history: Record<string, string> = {};
 
   private readonly CLEAR_STATE = {};
 
@@ -63,6 +66,27 @@ export class NotifyService {
     }
   }
 
+  private trackHistory({id, ...notify }: Notify): { isDuplicate: boolean } {
+    const historyValues =  Object.values(this.history);
+    const historyKeys =  Object.keys(this.history);
+    const match = JSON.stringify(notify);
+    const isDuplicate = historyValues.includes(match);
+
+    if (!isDuplicate) {
+      this.history[id] = match;
+      setTimeout(() => void delete this.history[id], notify.ttl)
+    }
+
+    if (historyKeys.length >= 5) {
+      const toDelete = historyKeys.shift();
+      if (typeof toDelete === "string" && this.history.hasOwnProperty(toDelete)) {
+        delete this.history[toDelete];
+      }
+    }
+
+    return { isDuplicate }
+  }
+
   private flash(message: string | NotifyMessage, type: NotifyType = NotifyType.Info): void {
     const id = Date.now();
     let title: string | undefined;
@@ -74,7 +98,7 @@ export class NotifyService {
       message = message.message;
     }
 
-    this.addMessageToList({
+    const notify = {
       id,
       message,
       title,
@@ -83,7 +107,17 @@ export class NotifyService {
       isSuccess: type === NotifyType.Success,
       isInfo: type === NotifyType.Info,
       isError: type === NotifyType.Error,
-    });
+    };
+
+    let shouldAlert = true;
+
+    if (this.settings.suppressDuplicates) {
+      const { isDuplicate } = this.trackHistory(notify);
+      shouldAlert = !isDuplicate;
+    }
+
+    if (shouldAlert) this.addMessageToList(notify);
+
     setTimeout(() => this.remove(id), ttl);
   }
 
