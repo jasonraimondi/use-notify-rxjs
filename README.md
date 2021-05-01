@@ -85,6 +85,8 @@ enum NotifyType {
 }
 ```
 
+Provider Options:
+
 ```jsx
 <NotifyProvider ttl={4500} supressDuplicates={true}>
   <Demo />
@@ -92,3 +94,4 @@ enum NotifyType {
 ```
 
 - **`ttl`**_`: number (optional, default: 4500)`_ - number of ms the notification should be kept alive
+- **`supressDuplicates`**_`: boolean (optional, default: false)`_ - supress duplicate notifications by tracking notify history
